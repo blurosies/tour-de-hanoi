@@ -4,13 +4,13 @@
 def lireCoords(plateau):
     # dep = depart
     dep=int(input('tour de depart?'))
-    while (dep < 0 or dep > 2) :
+    while (dep < -1 or dep > 2) :
         dep = int(input("Cette tour de depart n'existe pas, essaye encore une fois (entre 0 et 2) : "))
     while (len(plateau[dep])== 0):
         dep = int(input("Cette tour de depart est vide, essaye encore une fois : "))
     # arr = arrivee
     arr=int(input("tour d'arrivee?"))
-    while (arr < 0 or arr > 2) :
+    while (arr < -1 or arr > 2) :
         arr = int(input("Cette tour de d'arrivee n'existe pas, essaye encore une fois (entre 0 et 2) : "))
     while disqueSup(plateau, arr)< disqueSup(plateau, dep):
         arr = int(input("Cette tour ne peut pas etre choisie, essaye encore une fois : "))
