@@ -24,10 +24,10 @@ if bgd in cou:
     bgcolor(bgd)
     
 
-# pl=input("Choisir la couleur du plateau (en anglais)")
-# while pl not in cou:
-#     pl=input("Couleur non disponible, veuillez réessayer")
-p1 = "red"
+pl=input("Choisir la couleur du plateau (en anglais)")
+while pl not in cou:
+    pl=input("Couleur non disponible, veuillez réessayer")
+
     
     
 ########################################
