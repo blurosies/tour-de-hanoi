@@ -43,9 +43,9 @@ def disqueSup(plateau, numtour):
         
     # Si la tour est vide:
     else:
-        sup= 'Tour vide, pas de disque superieur'
-        
-    return sup
+        sup= len(plateau[0]) + len(plateau[1]) + len(plateau[2])+1
+        
+    return sup
 
 
 
