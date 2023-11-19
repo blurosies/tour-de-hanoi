@@ -6,7 +6,7 @@ def lireCoords(plateau):
     dep=int(input('tour de depart?'))
     while (dep < -1 or dep > 2) :
         dep = int(input("Cette tour de depart n'existe pas, essaye encore une fois (entre 0 et 2) : "))
-    while (len(plateau[dep])== 0):
+    while (len(plateau[dep])== 0) and !=-1:
         dep = int(input("Cette tour de depart est vide, essaye encore une fois : "))
     # arr = arrivee
     arr=int(input("tour d'arrivee?"))
