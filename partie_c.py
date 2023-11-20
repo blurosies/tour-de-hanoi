@@ -1,13 +1,12 @@
-#Partie c
-
+#Partie C
 # Renvoie les coordonnees de la tour de depart et d'arrivee
 def lireCoords(plateau):
     # dep = depart
-    dep=int(input('tour de depart?'))
+    dep=int(input('tour de depart?(-1 pour arreter)'))
     while (dep < -1 or dep > 2) :
         dep = int(input("Cette tour de depart n'existe pas, essaye encore une fois (entre 0 et 2) : "))
-    while (len(plateau[dep])== 0) and !=-1:
-        dep = int(input("Cette tour de depart est vide, essaye encore une fois : "))
+    while (len(plateau[dep])== 0) and dep!=-1:
+        dep = int(input("Cette tour de depart est vide, essaye encore une fois : "))     
     # arr = arrivee
     arr=int(input("tour d'arrivee?"))
     while (arr < -1 or arr > 2) :
@@ -20,6 +19,7 @@ def lireCoords(plateau):
     listecoords.append(arr)
     return listecoords
 
+#joue un coup unique
 def jouerUnCoup(plateau,n):
     coords=lireCoords(plateau)
     dep=coords[0]
@@ -31,6 +31,15 @@ def jouerUnCoup(plateau,n):
     tourD.pop(-1)
     dessineDisque(tourA[-1],plateau,n)
 
-
-
-    
+#jeu principale
+def boucleJeu(plateau,n):
+  coups=0
+  coupsMax=2**n-1  
+  while not verifVictoire(plateau,n) and coups<coupsMax:
+    jouerUnCoup(plateau,n)
+    coups+=1
+  if verifVictoire:
+      print("vous avez gagne!!!")
+  if coups>=coupsMax:
+    print("Perdu...vous avez epuiser le nombre de coups.") 
+  print("vous avez utiliser",str(coups),"coups")
