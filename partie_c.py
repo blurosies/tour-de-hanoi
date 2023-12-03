@@ -43,3 +43,5 @@ def boucleJeu(plateau,n):
   if coups>=coupsMax:
     print("Perdu...vous avez epuiser le nombre de coups.") 
   print("vous avez utiliser",str(coups),"coups")
+    print("Perdu...vous avez epuiser le nombre de coups.") 
+  print("vous avez utiliser",str(coups),"coups")
