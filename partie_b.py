@@ -1,4 +1,4 @@
-#Partie B - Graphisme avec turtle
+#Partie B
 from turtle import*
 
 #Distances
@@ -13,26 +13,9 @@ hideturtle()
 speed(1000000)
 penup()
 setpos(x , y)
-pendown()
-
-cou=["white","gray","black","blue","cyan","turquoise","green","yellow","gold","olive","brown","orange","red","pink","violet","purple","lavender"]
-
-bgd=input("Choisir la couleur de fond d'éran (en anglais)")
-while bgd not in cou:
-    bgd=input("Couleur non disponible, veuillez réessayer")
-if bgd in cou:
-    bgcolor(bgd)
-    
-
-pl=input("Choisir la couleur du plateau (en anglais)")
-while pl not in cou:
-    pl=input("Couleur non disponible, veuillez réessayer")
-
-    
+pendown()  
     
 ########################################
-
-
 #Fonction tracé d'un rectangle pour faciliter les choses
 def rect(longeur, largeur):
     for i in range (4):
@@ -42,8 +25,6 @@ def rect(longeur, largeur):
         else:
             fd(largeur)
             left(90)
-
-
 
 #Fonction pour determiner ls coordonnées des disques
 def coords(nd, plateau, n):
@@ -71,16 +52,10 @@ def coords(nd, plateau, n):
         x=(espaceT)*(tour)+(espaceT/2)+4-((40+30*(nd-1))/2)-300
     return x,y
         
-
-
-
 #TRACER LE PLATEAU
-
 def dessinePlateau(n,couleur):
-
     fillcolor(couleur)
     pencolor(couleur)
-
     longeurP=((40+largeurP*n)+25)*3
     if n<2:
         penup()
@@ -90,7 +65,6 @@ def dessinePlateau(n,couleur):
         begin_fill()
         rect(longeurP, largeurP)
         end_fill()
-
     #Tracé des tours vides
     if n<2:
         return
@@ -100,7 +74,6 @@ def dessinePlateau(n,couleur):
         penup()
         goto(x2, y+largeurP)
         pendown()
-    
     t=0
     while t<=3:
         begin_fill()
@@ -112,16 +85,12 @@ def dessinePlateau(n,couleur):
         goto(x2+espaceT*(t-1) , y+largeurP)
         pendown()
 
-def dessineDisque(nd, plateau, n):
-    dis=input("Choisir la couleur du disque "+ str(nd) +" (en anglais)")
-    while dis not in cou:
-        dis=input("Couleur non disponible, veuillez réessayer")
-    if dis in cou:
-        fillcolor(dis)
-        pencolor(dis)
-        
-    if n<2:
-        return
+#Dessine un disque précis
+def dessineDisque(nd, plateau, n): 
+    fillcolor(dis)
+    pencolor(dis)    
+    if n<2: 
+        return #return et pas return false pour que le type de sortie soit consistent
     else:
         disque=coords(nd,plateau,n)
         penup()
@@ -131,9 +100,10 @@ def dessineDisque(nd, plateau, n):
         rect(40+(30*(nd-1)),20)
         end_fill()
 
+#Effacer le disque
 def effaceDisque(nd, plateau, n):
     if n<2:
-        return False
+        return
     else:
         disque=coords(nd,plateau,n)
         penup()
@@ -145,8 +115,7 @@ def effaceDisque(nd, plateau, n):
     rect(40+(30*(nd-1)),20)
     end_fill()
 
-
-
+#Dessin final des disques
 def dessineConfig(plateau,n):
     if n<2:
         return 
@@ -154,8 +123,7 @@ def dessineConfig(plateau,n):
         for d in range (1,n+1):
             dessineDisque(d,plateau,n)
 
-
-
+#vider le plateau
 def effaceTout(plateau,n):
     if n<2:
         return 
@@ -166,18 +134,3 @@ def effaceTout(plateau,n):
     goto(-300,-200)
     down()
     dessinePlateau(n,"red")
-
-
-
-
-
-
-
-#Début programme principale
-
-
-
-dessinePlateau(3,"red")
-dessineConfig([[],[3,2],[1]], 3)
-effaceTout([[],[3,2],[1]], 3)
-exitonclick()
