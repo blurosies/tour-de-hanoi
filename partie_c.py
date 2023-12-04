@@ -19,8 +19,22 @@ def lireCoords(plateau):
     listecoords.append(arr)
     return listecoords
 
+def tracetour(tour,dis):
+    pencolor(pl)
+    fillcolor(pl)
+    longeurP=((40+largeurP*dis)+25)*3
+    espaceT=(40+30*dis)+20
+    x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
+    posi(x2+espaceT*(tour) , y+largeurP)
+    begin_fill()
+    rect(largeurT, longeurT*dis)
+    end_fill()
+    
+    
+
 #joue un coup unique
 def jouerUnCoup(plateau,n):
+    pencolor(pl)
     coords=lireCoords(plateau)
     dep=coords[0]
     arr=coords[1]
@@ -29,19 +43,5 @@ def jouerUnCoup(plateau,n):
     effaceDisque(tourD[-1],plateau,n)
     tourA.append(tourD[-1])
     tourD.pop(-1)
-    dessineDisque(tourA[-1],plateau,n)
-
-#jeu principale
-def boucleJeu(plateau,n):
-  coups=0
-  coupsMax=2**n-1  
-  while not verifVictoire(plateau,n) and coups<coupsMax:
-    jouerUnCoup(plateau,n)
-    coups+=1
-  if verifVictoire:
-      print("vous avez gagne!!!")
-  if coups>=coupsMax:
-    print("Perdu...vous avez epuiser le nombre de coups.") 
-  print("vous avez utiliser",str(coups),"coups")
-    print("Perdu...vous avez epuiser le nombre de coups.") 
-  print("vous avez utiliser",str(coups),"coups")
+    tracetour(int(dep),n)
+    dessineConfig(plateau,n)
