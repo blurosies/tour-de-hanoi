@@ -8,12 +8,17 @@ largeurP=30
 longeurT=30
 largeurT=8
 
+def posi(x,y):
+    penup()
+    setpos(x , y)
+    pendown() 
+
 #config. de turtle
 hideturtle()
-speed(1000000)
-penup()
-setpos(x , y)
-pendown()  
+speed('fastest')
+posi(x,y)
+
+
     
 ########################################
 #Fonction tracé d'un rectangle pour faciliter les choses
@@ -71,19 +76,14 @@ def dessinePlateau(n,couleur):
     else:
         espaceT=(40+30*n)+20
         x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
-        penup()
-        goto(x2, y+largeurP)
-        pendown()
+        posi(x2, y+largeurP)
     t=0
     while t<=3:
         begin_fill()
         rect(largeurT, longeurT*n)
         t+=1
         end_fill()
-        
-        penup()
-        goto(x2+espaceT*(t-1) , y+largeurP)
-        pendown()
+        posi(x2+espaceT*(t-1) , y+largeurP)
 
 #Dessine un disque précis
 def dessineDisque(nd, plateau, n): 
@@ -133,4 +133,4 @@ def effaceTout(plateau,n):
     up()
     goto(-300,-200)
     down()
-    dessinePlateau(n,"red")
+    dessinePlateau(n,pl)
