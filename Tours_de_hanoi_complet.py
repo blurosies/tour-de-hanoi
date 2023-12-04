@@ -63,12 +63,17 @@ largeurP=30
 longeurT=30
 largeurT=8
 
+def pos(x,y):
+    penup()
+    setpos(x , y)
+    pendown() 
+
 #config. de turtle
 hideturtle()
-speed(1000000)
-penup()
-setpos(x , y)
-pendown()  
+speed('fastest')
+pos(x,y)
+
+
     
 ########################################
 #Fonction tracé d'un rectangle pour faciliter les choses
@@ -126,19 +131,14 @@ def dessinePlateau(n,couleur):
     else:
         espaceT=(40+30*n)+20
         x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
-        penup()
-        goto(x2, y+largeurP)
-        pendown()
+        pos(x2, y+largeurP)
     t=0
     while t<=3:
         begin_fill()
         rect(largeurT, longeurT*n)
         t+=1
         end_fill()
-        
-        penup()
-        goto(x2+espaceT*(t-1) , y+largeurP)
-        pendown()
+        pos(x2+espaceT*(t-1) , y+largeurP)
 
 #Dessine un disque précis
 def dessineDisque(nd, plateau, n): 
@@ -188,7 +188,7 @@ def effaceTout(plateau,n):
     up()
     goto(-300,-200)
     down()
-    dessinePlateau(n,"red")
+    dessinePlateau(n,pl)
 
 
 
@@ -214,8 +214,22 @@ def lireCoords(plateau):
     listecoords.append(arr)
     return listecoords
 
+def tracetour(tour,dis):
+    pencolor(pl)
+    fillcolor(pl)
+    longeurP=((40+largeurP*dis)+25)*3
+    espaceT=(40+30*dis)+20
+    x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
+    pos(x2+espaceT*(tour) , y+largeurP)
+    begin_fill()
+    rect(largeurT, longeurT*dis)
+    end_fill()
+    
+    
+
 #joue un coup unique
 def jouerUnCoup(plateau,n):
+    pencolor(pl)
     coords=lireCoords(plateau)
     dep=coords[0]
     arr=coords[1]
@@ -224,22 +238,55 @@ def jouerUnCoup(plateau,n):
     effaceDisque(tourD[-1],plateau,n)
     tourA.append(tourD[-1])
     tourD.pop(-1)
-    dessineDisque(tourA[-1],plateau,n)
+    tracetour(int(dep),n)
+    dessineConfig(plateau,n)
 
 #jeu principale
 def boucleJeu(plateau,n):
   coups=0
-  coupsMax=2**n-1  
+  coupsMax=2**n +20
   while not verifVictoire(plateau,n) and coups<coupsMax:
     jouerUnCoup(plateau,n)
     coups+=1
   if verifVictoire:
       print("vous avez gagne!!!")
-  if coups>=coupsMax:
+  if coups>coupsMax:
     print("Perdu...vous avez epuiser le nombre de coups.") 
   print("vous avez utiliser",str(coups),"coups")
 
+#Partie F
+#Solution du jeu automatique utilisant un algorithme récursif
+def automat(disques, depart, arrive):
+    mouv=[]
+    def listesol(dep,arr): #cette fonction sert a mettre la solution dans une liste
+        mouv.append((dep,arr))   
+    def solu(disques,depart,arrive):
+        milieu=3-(depart+arrive) #car nos tours sont numerotées 0 1 et 2
+        if disques==1:
+            listesol(depart , arrive)
+        else:
+            solu(disques-1 , depart , milieu)
+            listesol(depart , arrive)
+            solu(disques-1 , milieu , arrive)
+    solu(disques,depart,arrive)
+    return mouv
+    
 
+def solutionjeu(n,dep,arr):
+    sol=automat(n,dep,arr)
+    i=0
+    while i<len(sol):
+        coup=sol[i]
+        dep=coup[0]
+        arr=coup[1]
+        tourD=plateau[dep]
+        tourA=plateau[arr]
+        effaceDisque(tourD[-1],plateau,n)
+        tourA.append(tourD[-1])
+        tourD.pop(-1)
+        tracetour(int(dep),n)
+        dessineConfig(plateau,n)
+        i+=1
 
 
 
@@ -269,7 +316,7 @@ disques=int(input("Combien de disques?"))
 dessinePlateau(disques,pl)
 plateau=init(disques)
 dessineConfig(plateau,disques)
-boucleJeu(plateau,disques)
-
+#boucleJeu(plateau,disques)
+#solutionjeu(disques,0,2)
 
 exitonclick()
