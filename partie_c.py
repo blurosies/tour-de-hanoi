@@ -45,3 +45,15 @@ def jouerUnCoup(plateau,n):
     tourD.pop(-1)
     tracetour(int(dep),n)
     dessineConfig(plateau,n)
+
+def boucleJeu(plateau,n):
+    coupsMax=coupsmax(n)
+    count=0
+    while count<coupsMax:
+        jouerUnCoup(plateau,n)
+        count+=1
+    if verifVictoire==True:
+        print("vous avez gagne!!!")      
+    else:
+        print("Perdu...vous avez epuiser le nombre de coups.")
+    print("vous avez utiliser",str(count),"coups")
