@@ -2,6 +2,7 @@ from turtle import*
 from tkinter import*
 from time import*
 from copy import*
+from pickle import*
 
 
 #Partie A
@@ -61,7 +62,6 @@ def verifVictoire(plateau, n):
 
 #Partie B
 #Distances
-x=-300
 y=-200
 largeurP=30
 longeurT=30
@@ -75,7 +75,6 @@ def posi(x,y):
 #config. de turtle
 hideturtle()
 speed('fastest')
-posi(x,y)
     
 ########################################
 #Fonction tracé d'un rectangle pour faciliter les choses
@@ -90,6 +89,10 @@ def rect(longeur, largeur):
 
 #Fonction pour determiner ls coordonnées des disques
 def coords(nd, plateau, n):
+    espaceT=(40+30*n)+20
+    longeurP=((40+largeurP*n)+25)*3
+    xt=-longeurP/2
+    x2=((((longeurP+xt)+xt)/2)-largeurT)-espaceT
     #Quelle tour
     k=len(plateau)
     for i in range(k):
@@ -106,12 +109,12 @@ def coords(nd, plateau, n):
         else:
             j+=1
     #Coordonnées
-    espaceT=(40+30*n)+20
-    y=(25*posit)-170
+    
+    y=(22*posit)-168
     if tour==0:
-        x=(espaceT/2)*(tour+1)+4-((40+30*(nd-1))/2)-300
+        x=x2+4-((40+30*(nd-1))/2)
     else:
-        x=(espaceT)*(tour)+(espaceT/2)+4-((40+30*(nd-1))/2)-300
+        x=x2+(espaceT)*(tour)+4-((40+30*(nd-1))/2)
     return x,y
         
 #TRACER LE PLATEAU
@@ -119,7 +122,10 @@ def dessinePlateau(n,couleur):
     fillcolor(couleur)
     pencolor(couleur)
     longeurP=((40+largeurP*n)+25)*3
-    posi(-300,-200)
+    up()
+    home()
+    down()
+    posi(-longeurP/2,-200)
     begin_fill()
     rect(longeurP, largeurP)
     end_fill()
@@ -127,6 +133,7 @@ def dessinePlateau(n,couleur):
     if n<2:
         return
     else:
+        x=-longeurP/2
         espaceT=(40+30*n)+20
         x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
         posi(x2, y+largeurP)
@@ -180,18 +187,23 @@ def effaceTout(plateau,n):
 #-------------------------------------------------------------------------------------------------------------------
 #cette fonction est utilisée si l'utilisateur choisi de jouer en utilisant le terminal
 def lireCoords(plateau):
+    opt=['0','1','2']
     # dep = depart
-    dep=int(input('tour de depart?'))
-    while (dep < -1 or dep > 2) :
-        dep = int(input("Cette tour de depart n'existe pas, essaye encore une fois (entre 0 et 2) : "))
-    while (len(plateau[dep])== 0) and dep!=-1:
-        dep = int(input("Cette tour de depart est vide, essaye encore une fois : "))     
+    dep=input('tour de depart?')
+    while dep not in opt :
+        dep =input("Cette tour de depart n'existe pas, essaye encore une fois (entre 0 et 2) : ")
+    if dep in opt:
+        dep=int(dep)
+    while (len(plateau[dep])== 0):
+        dep =input("Cette tour de depart est vide, essaye encore une fois : ")    
     # arr = arrivee
-    arr=int(input("tour d'arrivee?"))
-    while (arr < -1 or arr > 2) :
-        arr = int(input("Cette tour de d'arrivee n'existe pas, essaye encore une fois (entre 0 et 2) : "))
+    arr=input("tour d'arrivee?")
+    while arr not in opt:
+        arr =input("Cette tour de d'arrivee n'existe pas, essaye encore une fois (entre 0 et 2) : ")
+    if arr in opt:
+        arr=int(arr)
     while disqueSup(plateau, arr)< disqueSup(plateau, dep):
-        arr = int(input("Cette tour ne peut pas etre choisie, essaye encore une fois : "))
+        arr =input("Cette tour ne peut pas etre choisie, essaye encore une fois : ")
     # Les coordonneees seront renvoyees sous forme de liste nommee 'listecoords'
     listecoords=[]
     listecoords.append(dep)
@@ -216,7 +228,7 @@ def coupsmax(n): #Plus le niveau est difficile, moin il y a des coups
 #Cette partie utilise des bouttons pour jouer au lieu d'écrire dans le terminal. c'est beaucoup plus long et moin efficace à codé et utilise bcp de variables globale dans les fonction
 #On note aussi que dans cette partie plusieures règles du jeu initiale ne sont pas codés (plus grand disque sur petit disque)
 listecoords=[]
-disques = int(textinput("Message","Combien de disques?"))
+disques =int(textinput("Message","Combien de disques?"))
 while disques<2:
     disques = int(textinput("Message","Impossible d'avoir moin que deux disques..."))
 lim=coupsmax(disques)
@@ -236,14 +248,14 @@ def tourun(plateau, disques): #Bouton tour 0 (tour 1 dans l'interface pour moin 
         if verifVictoire(plateau,disques)==True:
             up()
             home()
-            pencolor("yellow")
-            write("vous avez gagne!!!",font="16", align="center")     
+            pencolor("dark green")
+            write("vous avez gagne!!!",font="20", align="center")     
         else:
             if count==lim:
                 up()
                 home()
-                pencolor("yellow")
-                write("Perdu...vous avez epuiser le nombre de coups.",font="16", align="center")
+                pencolor("dark green")
+                write("Perdu...vous avez epuiser le nombre de coups.",font="20", align="center")
     
     return listecoords
     
@@ -260,14 +272,14 @@ def tourde(plateau, disques): #Bouton tour 1
         if verifVictoire(plateau,disques)==True:
             up()
             home()
-            pencolor("yellow")
-            write("vous avez gagne!!!",font="16", align="center")     
+            pencolor("dark green")
+            write("Vous avez gagné!!!",font="20", align="center")     
         else:
             if count==lim:
                 up()
                 home()
-                pencolor("yellow")
-                write("Perdu...vous avez epuiser le nombre de coups.",font="16", align="center")
+                pencolor("dark green")
+                write("Perdu...vous avez epuiser le nombre de coups.",font="20", align="center")
     
     return listecoords
     
@@ -285,22 +297,26 @@ def tourtr(plateau, disques): #Bouton tour 2
         if verifVictoire(plateau,disques)==True:
             up()
             home()
-            pencolor("yellow")
-            write("vous avez gagne!!!",font="16", align="center")     
+            pencolor("dark green")
+            write("vous avez gagne!!!",font="20", align="center")     
         else:
             if count==lim:
                 up()
                 home()
-                pencolor("yellow")
-                write("Perdu...vous avez epuiser le nombre de coups.",font="16", align="center")
+                pencolor("dark green")
+                write("Perdu...vous avez epuiser le nombre de coups.",font="20", align="center")
     
     return listecoords
 
 
 def tracetour(tour,dis): #retrace la tour a la partie manquante
     pencolor(pl)
-    fillcolor(pl)
     longeurP=((40+largeurP*dis)+25)*3
+    x=-longeurP/2
+    up()
+    home()
+    down()
+    fillcolor(pl)
     espaceT=(40+30*dis)+20
     x2=((((longeurP+x)+x)/2)-largeurT)-espaceT
     posi(x2+espaceT*(tour) , y+largeurP)
@@ -311,7 +327,6 @@ def tracetour(tour,dis): #retrace la tour a la partie manquante
 
 #jouer un coup unique
 def jouerUnCoupBout(plateau,n, coup): #pour les boutons
-    pencolor(pl)
     dep=coup[0]
     arr=coup[1]
     tourD=plateau[dep]
@@ -325,7 +340,6 @@ def jouerUnCoupBout(plateau,n, coup): #pour les boutons
     dessineConfig(plateau,n)
 
 def jouerUnCoup(plateau,n):#pour le terminal
-    pencolor(pl)
     coords=lireCoords(plateau)
     dep=coords[0]
     arr=coords[1]
@@ -335,30 +349,34 @@ def jouerUnCoup(plateau,n):#pour le terminal
     tourA.append(tourD[-1])
     tourD.pop(-1)
     tracetour(int(dep),n)
-    coups.append(plateau)
+    tempo=deepcopy(plateau)
+    coups.append(tempo)
     dessineConfig(plateau,n)
-
+count=0
 #jeu principale, utilisé si l'utilisateur joue dans le terminal
 def boucleJeu(plateau,n):
-    
+    global count
     coupsMax=lim
-    count=0
-    if count<coupsMax:
+    while count<coupsMax:
         #input coup
         
         jouerUnCoup(plateau,n)
         count+=1
             
         if verifVictoire(plateau,n)==True:
-                print("vous avez gagne!!!")     
+                print("vous avez gagne!!!")  
+                gagne= True 
+                break 
         else:
             if count==coupsMax:
                 print("Perdu...vous avez epuiser le nombre de coups.")
+            gagne=False
     print("vous avez utiliser",str(count),"coups")
+    return gagne
   
 #Partie D
 
-def dernierCoup (coups):
+def dernierCoup (coups): #renvoie le dernier coups joué
     coup=liste_to_dic(coups)
     P=[1,2]
     listek= list(coup.keys())
@@ -391,9 +409,9 @@ def dernierCoup (coups):
     return P[0],P[1]
 
 
-def annulerDernierCoup (coups,n):
-    global count
-    de,ar=dernierCoup (coups)
+def annulerDernierCoup (n):
+    global count,coups
+    de,ar=dernierCoup(coups)
     # enleve derniere config
     coups.pop(de)
     # retranche du compteur
@@ -410,7 +428,198 @@ def annulerDernierCoup (coups,n):
     dessineConfig(plateau,n)
 
 
+# Module pickle
+
+# output est le fichier de sortie avec l'extension .pickle et avec w en mode ecriture (binaire) et b en mode bytes
+def save (coups):
+    output= open("output.pickle","wb")
+    dump(coups,output)
+    output.close()
+# le fichier a ete creer et le dictionnaire a ete sauvegarder
+
+# pour reavoir acces a ce qui a ete sauvegarder: ( r en mode lecture)
+
+def reload ():
+    input= open("output.pickle","rb")
+    coups= load(input)
+    return coups
+
+
 #Partie E
+data={}
+def sauvScore (n,nbcoups,temps): #enregistrer une partie quand l'utilisateur gagne
+    global data
+    
+    score = ((nbcoups + temps) / n) 
+    
+    reponse= textinput("Message","voulez-vous enregistrer votre partie? (oui/non)")
+    if reponse.lower() == 'non':
+        print("D'accord, merci pour avoir joue !")
+    
+    elif reponse.lower() =='oui':
+        nom=textinput("Message","Quel est votre nom? ")
+        if nom not in data:
+            data[nom]={'n':n,'nbcoups':nbcoups, 'temps':temps, 'score': score}
+            return data
+        elif nom in data :
+            while nom in data:
+                rip= textinput("Message","Ce nom est deja enregistre, voulez-vous changer les donnes de", nom, " (taper 'oui') ou voulez-vous changer de nom? (tapez 'changer')")
+                if rip.lower() == 'oui':
+                    data[nom]={'n':n,'nbcoups':nbcoups, 'temps':temps, 'score': score}
+                    break
+                elif rip.lower() == 'changer':
+                    data[nom]={'n':n,'nbcoups':nbcoups, 'temps':temps, 'score': score}
+
+
+#----------------------------------------------------------------------------------------------
+def vainceurs_coups(joueurs):
+    noms=[]
+    coups=[]
+    x = 10000
+    no = ''
+    
+    for i in joueurs:
+        noms.append(i)
+        coups.append(joueurs[i]['nbcoups'])
+            
+    for sc in range (0,len(coups)):
+        if coups[sc] < x: 
+            x = coups[sc]
+            no = noms[sc]
+    return no , x
+
+def filter_disque(joueurs, n): # filtre les joueurs par rapport au nombre de disques
+    copie = {}
+    for nom in joueurs :
+        valeur = joueurs[nom]['n'] 
+        if valeur == n :
+            copie[nom] = joueurs[nom]
+    return copie
+
+#Pour le leaderboard
+
+def filter_min(joueurs, cle):
+    valeur_min = 100000000
+    x = []
+    n = []
+    for nom in joueurs :
+        valeur = joueurs[nom][cle] 
+        if valeur < valeur_min :
+            x.clear()
+            n.clear()
+            x.append(valeur)
+            n.append(nom)
+            valeur_min = valeur
+        elif valeur == valeur_min :
+            x.append(valeur)
+            n.append(nom)
+    return n, x
+
+def trier(joueurs, cle):
+    x=[]
+    n=[]
+    prov = deepcopy(joueurs)
+    while len(prov) > 0 :
+        nom,valeurs=filter_min(prov, cle)
+        n.append(nom)
+        x.append(valeurs)
+        for i in nom :
+          prov.__delitem__(i)
+    return n,x
+  
+
+#----------------------------------------------------------------------------------------------
+def vainceurs_temps(joueurs):
+    noms=[]
+    temps=[]
+    x=1000
+    no ='' 
+    for i in joueurs:
+        noms.append(i)
+        if 'minutes' in joueurs[i]['temps']:
+            lt=(joueurs[i]['temps']).split()
+            temps.append(int(lt[0])*60+int(lt[3]))
+        elif 'minutes' not in joueurs[i]['temps']:
+            lt=(joueurs[i]['temps']).split()
+            temps.append(int(lt[0]))
+    for sc in range (0,len(temps)):
+        if temps[sc] < x: 
+            x= temps[sc]
+            no =noms[sc]
+    return no,x
+
+
+
+#----------------------------------------------------------------------------------------------
+def vainceurs_valeurs(joueurs,gagnants,temps_g,coups_g):
+    t={}
+    c={}
+    v={}
+    noms=[]
+    valeurs22=[]
+    x=1000
+    no=''
+    for i in range (len(gagnants)):
+        t[gagnants[i]]=temps_g[i]
+        c[gagnants[i]]=coups_g[i]
+    for i in t:
+        v[i]=t[i]+c[i]
+
+    for i in range(len(joueurs)):
+        noms.append(list(joueurs)[i])
+        valeurs22.append(v[list(joueurs)[i]])
+    for sc in range (0,len(valeurs22)):
+        if valeurs22[sc] < x: 
+            x= valeurs22[sc]
+            no =noms[sc]
+    return no,x
+
+
+
+def dessine_tab(titre,valeurs,unite,gagnants,x,y): #dessine le leaderbord
+    hideturtle()
+    speed('fastest')
+
+    # ecrire dans frame 1 
+    speed('fastest')
+    hideturtle()
+    penup()
+    goto(x+100,y-35)
+    pendown()
+    color("green")
+    write(titre,font=('Ariel',15,'normal'))
+
+    
+    # rest of the frame
+    for i in range (1,len(gagnants)+1):
+        # writing in the rest of the frame 
+    
+        # Numbers
+        speed('fastest')
+        hideturtle()
+        penup()
+        goto(x+17,y-35+(-1*(21*(i-0.05))))
+        pendown()
+        color("black")
+        write(str (i),font=('Ariel',12,'normal'))
+    
+        # Players
+        speed('fastest')
+        hideturtle()
+        penup()
+        goto(x+50,y-35+(-1*(21*(i-0.05))))
+        pendown()
+        color("black")
+        write(gagnants[i-1],font=('Ariel',11,'normal'))
+    
+        # Points
+        speed('fastest')
+        hideturtle()
+        penup()
+        goto(x+250,y-35+(-1*(21*(i-0.05))))
+        pendown()
+        color("black")
+        write(str(valeurs[i-1]) + unite,font=('Ariel',11,'normal'))
 
 
 #Partie F
@@ -454,8 +663,26 @@ def solutionjeu(plateau,n,dep,arr): #dessine la solution
 bgd = "white"
 dis = "gray"
 pl = "black"
+pencolor("black")
 coups=[init(disques)] 
 
+class fenetre(Tk): #Quelques boutons de l'interface on besoin de la création d'une nouvelle fenetre turtle, les foncitons ci dessous nous initialisent les fenetres 
+    def __init__(wind, titre):
+        super().__init__()
+        wind.running = True
+        wind.title(titre)
+        wind.protocol("WM_DELETE_WINDOW", wind.destroy_window)
+        wind.canvas = Canvas(wind)
+        wind.canvas.pack(side=LEFT, expand=True, fill=BOTH)
+        wind.turtle = RawTurtle(TurtleScreen(wind.canvas))
+
+    def update_window(self):
+        if self.running:
+            self.update()
+
+    def destroy_window(self):
+        self.running = False
+        self.destroy()
 
 def liste_to_dic(liste):
     coups={}
@@ -474,12 +701,36 @@ def faire(): #fonction pour le boutton solution
     solbutton.destroy()
     
 def restart():#recommence le jeu
-    global plateau, disques,coups
+    global plateau, disques,coups,count
+    clear()
     coups=[]
-    effaceTout(plateau,disques)
+    count=0
     plateau=init(disques)
+    dessinePlateau(disques,pl)
     dessineConfig(plateau,disques)
-    boucleJeu(plateau,disques)    
+    ta=time()
+    ga=boucleJeu(plateau,disques)
+    tb=time() 
+    sd =int(tb-ta)
+    print('Temps de resolution:', sd, ' secondes.')
+    blo= sd
+    
+    if ga==True:
+        data=sauvScore (disques,count,blo)
+        print(data)
+    return plateau,disques
+ 
+def lead():
+    clear()
+    gagnants1, coups_g = trier(data, "nbcoups") 
+    gagnants2, temps_g = trier(data, "temps")
+    gagnants2, valeur_g = trier(data, "score")
+    
+    
+    dessine_tab("EFFICACITE : Coups",coups_g," coups                 ",gagnants1,-700,200)
+    dessine_tab("EFFICACITE :  Temps", temps_g," secondes                  ",gagnants2,-250,200)
+    dessine_tab("LEADERBOARD", valeur_g," points ",gagnants2,250,200)   
+    
 
 def close():#quitte le jeu. quand l'utilisateur joue dans le terminal, ce bouton ne marche pas tout le temps
     root.quit()
@@ -513,7 +764,7 @@ def noel():
     dis="dark olive green"
     pl="antique white"
     return bgd,dis,pl
-
+    
 def commencerBout():#Cette fonction permet de commencer le jeu en jouant purement dans l'interface sans utiliser le terminal
     global plateau,disques
     
@@ -521,23 +772,27 @@ def commencerBout():#Cette fonction permet de commencer le jeu en jouant puremen
     
     startbuttonB.destroy()
     startbuttonT.destroy()
+    reglebutton.destroy()
     exitbutton.place(relx=0.1, rely=0.1, anchor=CENTER)
     solbutton = Button(root.master, text="Solution", command=lambda: faire() ,bg="white",activebackground="light gray",font=15)
+    recbutton = Button(root.master, text="Restart", command=lambda: restart() ,bg="white",activebackground="light gray",font=15)
+    annbutton = Button(root.master, text="Annuler", command=lambda: annulerDernierCoup(disques) ,bg="white",activebackground="light gray",font=15)
+    leadbutton = Button(root.master, text="Leaderboard", command=lambda: lead() ,bg="white",activebackground="light gray",font=15)
     solbutton.pack()
-    solbutton.place(relx=0.9, rely=0.099999, anchor=CENTER)
-    recbutton = Button(root.master, text="Recommencer", command=lambda: restart() ,bg="white",activebackground="light gray",font=15)
-    recbutton.pack()
-    recbutton.place(relx=0.77, rely=0.099999, anchor=CENTER)
-    annbutton = Button(root.master, text="Annuler", command=lambda: annulerDernierCoup(coups,disques) ,bg="white",activebackground="light gray",font=15)
     annbutton.pack()
+    recbutton.pack()
+    leadbutton.pack()
+    recbutton.place(relx=0.77, rely=0.099999, anchor=CENTER)
+    solbutton.place(relx=0.9, rely=0.099999, anchor=CENTER)
     annbutton.place(relx=0.9, rely=0.2, anchor=CENTER)
+    leadbutton.place(relx=0.9, rely=0.9, anchor=CENTER)
     
     plateau=init(disques)
     dessinePlateau(disques,pl)
     dessineConfig(plateau,disques)
-    tour1 = Button(root.master, text="Tour 1", command=lambda: tourun(plateau, disques), bg="white",font=20)
-    tour2= Button(root.master, text="Tour 2", command=lambda: tourde(plateau, disques),bg="white",font=20)
-    tour3= Button(root.master, text="Tour 3", command=lambda: tourtr(plateau, disques),bg="white",font=20)
+    tour1 = Button(root.master, text="Tour 1", command=lambda: tourun(plateau, disques),bg="white",activebackground="light gray",font=20)
+    tour2= Button(root.master, text="Tour 2", command=lambda: tourde(plateau, disques),bg="white",activebackground="light gray",font=20)
+    tour3= Button(root.master, text="Tour 3", command=lambda: tourtr(plateau, disques),bg="white",activebackground="light gray",font=20)
 
     tour1.pack(side=LEFT,anchor='s')
     tour2.pack(side=LEFT,anchor='s')
@@ -556,16 +811,21 @@ def commencerTerm():#Jouer avec le terminal
     #réarrangement de l'interface
     startbuttonB.destroy()
     startbuttonT.destroy()
+    reglebutton.destroy()
     exitbutton.place(relx=0.1, rely=0.1, anchor=CENTER)
     solbutton = Button(root.master, text="Solution", command=lambda: faire() ,bg="white",activebackground="light gray",font=15)
+    recbutton = Button(root.master, text="Restart", command=lambda: restart() ,bg="white",activebackground="light gray",font=15)
+    annbutton = Button(root.master, text="Annuler", command=lambda: annulerDernierCoup(disques) ,bg="white",activebackground="light gray",font=15)
+    leadbutton = Button(root.master, text="Leaderboard", command=lambda: lead() ,bg="white",activebackground="light gray",font=15)
+    leadbutton.pack()
     solbutton.pack()
-    solbutton.place(relx=0.9, rely=0.099999, anchor=CENTER)
-    recbutton = Button(root.master, text="Recommencer", command=lambda: restart() ,bg="white",activebackground="light gray",font=15)
     recbutton.pack()
-    recbutton.place(relx=0.77, rely=0.099999, anchor=CENTER)
-    annbutton = Button(root.master, text="Annuler", command=lambda: annulerDernierCoup(coups,disques) ,bg="white",activebackground="light gray",font=15)
     annbutton.pack()
+    solbutton.place(relx=0.9, rely=0.099999, anchor=CENTER)
+    recbutton.place(relx=0.77, rely=0.099999, anchor=CENTER)
     annbutton.place(relx=0.9, rely=0.2, anchor=CENTER)
+    leadbutton.place(relx=0.9, rely=0.9, anchor=CENTER)
+
     jour1.destroy()
     nuit1.destroy()
     noel1.destroy()
@@ -573,18 +833,62 @@ def commencerTerm():#Jouer avec le terminal
     plateau=init(disques)
     dessinePlateau(disques,pl)
     dessineConfig(plateau,disques)
-    boucleJeu(plateau,disques)
+    ta=time()
+    ga=boucleJeu(plateau,disques)
+    tb=time()
+    sd =int(tb-ta)
+    print('Temps de resolution:', sd, ' secondes.')
+    blo=sd
+    if ga==True:
+        sauvScore (disques,count,blo)
+        print(data)
+    # gagnants1 = filter_min(data, "nbcoups") 
+    # gagnants2 = filter_min(data, "temps")
+    # gagnants,coups_g=filter(data)
+    # gagnants1,temps_g=filtert(data)
+    # gagnants2,valeur_g=filterv(data)
+    # print(gagnants,coups_g)
+    # print(gagnants1,temps_g)
+    # print(gagnants2,valeur_g)
     return plateau,disques
  
+def regle():
+    fen1 = fenetre('Règles')
+    t1=fen1.turtle
+    t1.hideturtle()
+    t1.up()
+    t1.setpos(0,20)
+    t1.write("On dispose de 3 piquets fixés sur un socle,",align='left') 
+    t1.setpos(50,0)
+    t1.write("et d'un nombre n de disques de diamètres différents. Les disques sont empilés sur un piquet,",align='left') 
+    t1.setpos(50,-20)
+    t1.write("en commençant du plus large au plus petit.Le nombre de disques peut varier.", align='left')
+    t1.setpos(50,-40)
+    t1.write("Plus il y a de disques au départ, plus le jeu est difficile.", align='left')
+    t1.setpos(50,-60)
+    t1.write(" il faut Déplacer les disques d'une tour de 'départ' à une tour 'd'arrivée'", align='left')
+    t1.setpos(50,-80)
+    t1.write("en passant par une tour 'intermédiaire', et ceci en un minimum de coups.", align='left')
+    t1.setpos(50,-100)
+    t1.write("- On ne déplace qu'un seul disque à la fois", align='left')
+    t1.setpos(50,-120)
+    t1.write("- Le disque déplacé ne doit pas être placé au-dessus d'un disque plus petit", align='left')
+    t1.setpos(50,-140)
+    t1.write("- On ne peut pas revenir en arrière deux fois d'affiler", align='left')
+    
+    while fen1.running:
+        fen1.update_window()
+
+
 def main():#interface main menu
     up()
-    setpos(0,300)
+    setpos(0,250)
     write('Tours', font=('Rubik',50,'bold'), align='center')
-    setpos(0,220)
+    setpos(0,170)
     write('De', font=('Rubik',50,'bold'), align='center')
-    setpos(0,150)
+    setpos(0,100)
     write('Hanoi', font=('Rubik',50,'bold'), align='center')
-    setpos(0,110)
+    setpos(0,60)
     write("Appuyer START pour commencer", font=('Rubik',10,'bold'), align='center')
 
 #--------------------------------------------------------------------------------------------------    
@@ -597,28 +901,26 @@ canvas = getcanvas()
 main()
 
 jour1 = Button(root.master, text="Jour", command=lambda: jour(), bg="white",font=15)
-jour1.pack(side='right')
-
 nuit1= Button(root.master, text="Nuit", command=lambda: nuit(),bg="white",font=15)
-nuit1.pack(side='right')
-
 noel1= Button(root.master, text="Noel", command=lambda: noel(),bg="white",font=15)
-noel1.pack(side='right')
-
 startbuttonB = Button(root.master, text="Start (B)", command=lambda: commencerBout(),bg="white",activebackground="light gray",font=15)
-startbuttonB.pack()
-startbuttonB.place(relx=0.45, rely=0.5, anchor=CENTER)
-
 startbuttonT = Button(root.master, text="Start (T)", command=lambda: commencerTerm(),bg="white",activebackground="light gray",font=15)
-startbuttonT.pack()
-startbuttonT.place(relx=0.55, rely=0.5, anchor=CENTER)
-
 solbutton = Button(root.master, text="Solution", command=lambda: faire() ,bg="white",activebackground="light gray",font=15)
-
 exitbutton = Button(root.master, text=" Exit ", command=lambda: close() ,bg="white",activebackground="light gray",font=15)
+reglebutton = Button(root.master, text=" Règles ", command=lambda:regle() ,bg="white",activebackground="light gray",font=15)
+jour1.pack(side='right')
+nuit1.pack(side='right')
+noel1.pack(side='right')
+startbuttonB.pack()
+startbuttonT.pack()
 exitbutton.pack()
-exitbutton.place(relx=0.5, rely=0.6, anchor=CENTER)
- 
+reglebutton.pack()
+startbuttonB.place(relx=0.45, rely=0.5, anchor=CENTER)
+startbuttonT.place(relx=0.55, rely=0.5, anchor=CENTER)
+exitbutton.place(relx=0.5, rely=0.7, anchor=CENTER)
+reglebutton.place(relx=0.5,rely=0.6, anchor=CENTER )
+
+exitonclick()
 root.mainloop()
 #--------------------------------------------------------------------------------------------------    
 
